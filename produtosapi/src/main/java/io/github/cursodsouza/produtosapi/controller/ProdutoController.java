@@ -2,10 +2,7 @@ package io.github.cursodsouza.produtosapi.controller;
 
 import io.github.cursodsouza.produtosapi.model.Produto;
 import io.github.cursodsouza.produtosapi.repository.ProdutoRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -28,5 +25,10 @@ public class ProdutoController {
 
         produtoRepository.save(produto);
         return produto;
+    }
+
+    @GetMapping("{id}") // não precisa colocar a "/" antes do "{id}", já subentende que tem e tem que colocar no postman
+    public Produto obterPorId(@PathVariable("id") String id){
+        return produtoRepository.findById(id).orElse(null);
     }
 }
