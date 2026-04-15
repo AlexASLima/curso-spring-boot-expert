@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/carros")
 public class TesteFabricaController {
-    @Autowired // Injetando a dependencia motor da classe MontadoraConfiguration
+    @Autowired // Injetando a dependencia 'private Motor motor' da classe MontadoraConfiguration nessa classe.
     //@Qualifier("motorAspirado") // Tem q setar o nome do bean quando tem mais de 1 bean do msm tipo no container/app.
                                  // escolhe o bean a ser injetado.
-    @Eletrico // Faz o papel do acima, foi criado uma anotation propria para injetar.
+    @Eletrico // Faz o papel do acima, foi criado uma anotation propria para injetar motor do tipo 'Eletrico'.
     private Motor motor;
 
     @PostMapping
