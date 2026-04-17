@@ -13,9 +13,10 @@ public class MontadoraConfiguration {
     @Bean(name = "motorAspirado") // não obrigatorio, se não colocar pega o nome do metodo.
     //@Primary // Para caso existir mais de 1 bean do msm tipo, como nesse caso (Motor), com essa
              // notacao esse sera o padrao injetado caso não informar o nome da injecao.
-    public Motor motorAspirado(){
+    public Motor motorAspirado(/*@Value("${app.montadora-padrao}") Integer cavalos*/){ // para pegar valor padrão do propreiets
         var motor = new Motor();
         motor.setCavalos(120);
+        //motor.setCavalos(cavalos);
         motor.setCilindros(4);
         motor.setModelo("XPTO-0");
         motor.setLitragem(2.0);
