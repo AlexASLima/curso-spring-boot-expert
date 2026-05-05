@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "livro")
-@Data // incorpora os: getter e setters e outra outras deixando completo
+@Data // incorpora os: getter e setters e outras outras (to string, etc.) deixando completo
 public class Livro {
 
     @Id

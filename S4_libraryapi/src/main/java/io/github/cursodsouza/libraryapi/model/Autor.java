@@ -3,6 +3,7 @@ package io.github.cursodsouza.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Table(name = "autor", schema = "public") // como public é o default, não é obrig. escrever.
 @Getter
 @Setter
+@ToString
 public class Autor {
     @Id
     @Column(name = "id")
