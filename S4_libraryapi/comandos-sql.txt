@@ -15,3 +15,8 @@ create table livro (
    id_autor uuid not null references autor(id),
    constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO','ROMANCE', 'BIOGRAFIA', 'CIENCIA') )
 );
+
+// Para verificar testes:
+select l.id, l.titulo as nome_livro, a.nome as nome_autor
+from livro as l
+join autor as a on l.id_autor = a.id
