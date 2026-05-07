@@ -34,7 +34,11 @@ public class Livro {
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(
+    //      cascade = CascadeType.ALL, (cascade = CascadeType.ALL) //Não vamos usar pois é critico trabalhar com cascade
+            //fetch = FetchType.EAGER // É por padrão não necessita colocar. Trás o autor ao 'ler' o objeto livro.
+            fetch = FetchType.LAZY // Não trás o autor ao 'ler' o objeto livro.
+    )
     @JoinColumn(name = "id_autor")
     private Autor autor;
 }

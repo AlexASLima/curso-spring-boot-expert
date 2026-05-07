@@ -6,6 +6,7 @@ import io.github.cursodsouza.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -100,5 +101,17 @@ class LivroRepositoryTest {
     void deletarCascade(){ // Bastante cuidado ao usar com cascate. O Autor do livro tbm é deletado ao deletar o livro!
         UUID id = UUID.fromString("22238c02-8118-45ba-a9f0-202dfc3acc67");
         repository.deleteById(id);
+    }
+
+    @Test
+    @Transactional // Se no model o relacionamento LARY e precisa ler o autor, realiza o select para trazer o autor.
+    void buscarLivroTest(){
+        UUID id = UUID.fromString("99174c1b-ed1b-4abb-b9ff-d6da7a8af542");
+        Livro livro = repository.findById(id).orElse(null);
+        System.out.println("Livro:");
+        System.out.println(livro.getTitulo());
+
+        System.out.println("Autor:");
+        System.out.println(livro.getAutor().getNome());
     }
 }
