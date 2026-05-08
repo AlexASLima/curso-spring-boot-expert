@@ -29,7 +29,6 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    //@OneToMany(mappedBy = "autor")
-    @Transient  // para deixar salvar sem a relação, para teste.
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //, fetch = FetchType.LAZY) por padrão o relac. Evitar .EAGLE
     private List<Livro> livros;
 }
