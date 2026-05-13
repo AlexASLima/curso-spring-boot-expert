@@ -20,3 +20,6 @@ create table livro (
 select l.id, l.titulo as nome_livro, a.nome as nome_autor
 from livro as l
 join autor as a on l.id_autor = a.id
+
+// busca
+select * from livro where titulo like '%casa%'

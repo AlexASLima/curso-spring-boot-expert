@@ -12,3 +12,5 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update # Nao usado em producao. Em producao aconselhavel por script.
+    properties:
+      hibernate.format_sql: true

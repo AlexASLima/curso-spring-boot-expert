@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "livro")
 @Data // incorpora os: getter e setters e outras outras (to string, etc.) deixando completo
-@ToString(exclude = "autor") // é campo para relacionamento e não precisa mostrar, é somente
+@ToString(exclude = "autor") // é campo para relacionamento e não precisa mostrar.
 public class Livro {
 
     @Id
@@ -36,7 +36,7 @@ public class Livro {
     private BigDecimal preco;
 
     @ManyToOne(
-    //      cascade = CascadeType.ALL, (cascade = CascadeType.ALL) //Não vamos usar pois, aqui critico trabalhar com cascade
+    //      cascade = CascadeType.ALL, (cascade = CascadeType.ALL) //Não sera usado, pois aqui critico trabalhar com cascade
             //fetch = FetchType.EAGER // É por padrão não necessita colocar. Trás o autor ao 'ler' o objeto livro.
             fetch = FetchType.LAZY // Não trás o autor ao 'ler' o objeto livro.
     )

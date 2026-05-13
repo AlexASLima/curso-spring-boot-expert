@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "autor", schema = "public") // como public é o default, não é obrig. escrever.
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"livros"})
 public class Autor {
     @Id
     @Column(name = "id")
@@ -29,6 +29,6 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //, fetch = FetchType.LAZY) por padrão o relac. Evitar .EAGLE
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //, fetch = FetchType.LAZY) por padrão o relac. é esse. Evitar o .EAGLE
     private List<Livro> livros;
 }
