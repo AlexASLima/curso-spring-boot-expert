@@ -34,7 +34,9 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //, fetch = FetchType.LAZY) por padrão o relac. é esse. Evitar o .EAGLE
+    @OneToMany(mappedBy = "autor",
+            //cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY) //por padrão o relac. é esse. Evitar o .EAGLE
     private List<Livro> livros;
 
     // Campos de auditoria:
