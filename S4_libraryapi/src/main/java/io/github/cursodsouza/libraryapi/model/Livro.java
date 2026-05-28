@@ -2,15 +2,20 @@ package io.github.cursodsouza.libraryapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "livro")
 @Data // incorpora os: getter e setters e outras outras (to string, etc.) deixando completo
 @ToString(exclude = "autor") // é campo para relacionamento e não precisa mostrar.
+@EntityListeners(AuditingEntityListener.class)
 public class Livro {
 
     @Id
@@ -43,4 +48,5 @@ public class Livro {
 
     @JoinColumn(name = "id_autor")
     private Autor autor;
+
 }
