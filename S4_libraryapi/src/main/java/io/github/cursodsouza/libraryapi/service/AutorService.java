@@ -6,6 +6,8 @@ import io.github.cursodsouza.libraryapi.repository.AutorRepository;
 import io.github.cursodsouza.libraryapi.repository.LivroRepository;
 import io.github.cursodsouza.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,10 +46,6 @@ public class AutorService {
     }
 
     public List<Autor> pesquisa(String nome, String nacionalidade){
-        if(nome != null && nacionalidade !=null){
-            return repository.findByNomeAndNacionalidade(nome, nacionalidade);
-        }
-
         if(nome != null){
             return repository.findByNome(nome);
         }
@@ -57,6 +55,23 @@ public class AutorService {
         }
 
         return repository.findAll();
+    }
+
+    public List<Autor> pesquisaByExample(String nome, String nacionalidade){
+        var autor = new Autor();
+        autor.setNome(nome);
+        autor.setNacionalidade(nacionalidade);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                //.withIgnorePaths("dataCadastro") Ignora 'campo' mesmo vindo no objeto.
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<Autor> autorExample = Example.of(autor, matcher);
+
+        return repository.findAll(autorExample);
     }
 
     private boolean possueLivro(Autor autor){

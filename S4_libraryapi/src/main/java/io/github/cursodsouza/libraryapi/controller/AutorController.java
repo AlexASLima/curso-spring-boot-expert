@@ -6,6 +6,7 @@ import io.github.cursodsouza.libraryapi.exceptions.OperacaoNaoPermitida;
 import io.github.cursodsouza.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.cursodsouza.libraryapi.model.Autor;
 import io.github.cursodsouza.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AutorController {
     private final AutorService service;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor) {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor) {
         try {
             Autor autorEntidade = autor.mapearParaAutor();
             service.salvar(autorEntidade);
@@ -83,7 +84,7 @@ public class AutorController {
            @RequestParam(value = "nome", required = false) String nome,
            @RequestParam(value = "nacionalidade", required = false) String nacionalidade
     ){
-        List<Autor> resultado = service.pesquisa(nome, nacionalidade);
+        List<Autor> resultado = service.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> lista = resultado.stream()
                 .map(autor -> new AutorDTO(
                         autor.getId(),
