@@ -26,6 +26,7 @@ public class Autor {
     private UUID id;
 
     @Column(name = "nome", length = 100, nullable = false)
+    // private Strinf nomeAutor; Do ex. do AutorMapper com nome de campo diferente
     private String nome;
 
     @Column(name = "data_nascimento", nullable = false)

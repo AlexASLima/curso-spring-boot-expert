@@ -20,12 +20,4 @@ public record AutorDTO(
         @NotBlank(message = "Campo obrigatorio")
         @Size(min = 2, max = 50, message = "Campo fora do tamanho padrao")
         String nacionalidade) {
-
-        public Autor mapearParaAutor(){
-            Autor autor = new Autor();
-            autor.setNome(this.nome);
-            autor.setDataNascimento(this.dataNascimento);
-            autor.setNacionalidade(this.nacionalidade);
-            return autor;
-        }
 }
