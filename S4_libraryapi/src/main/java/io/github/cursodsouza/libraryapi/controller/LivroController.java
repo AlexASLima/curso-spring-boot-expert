@@ -2,42 +2,49 @@ package io.github.cursodsouza.libraryapi.controller;
 
 import io.github.cursodsouza.libraryapi.controller.dto.CadastroLivroDTO;
 import io.github.cursodsouza.libraryapi.controller.dto.ErroResposta;
+import io.github.cursodsouza.libraryapi.controller.dto.ResultadoPesquisaLivroDTO;
+import io.github.cursodsouza.libraryapi.controller.mappers.LivroMapper;
 import io.github.cursodsouza.libraryapi.exceptions.RegistroDuplicadoException;
+import io.github.cursodsouza.libraryapi.model.Livro;
 import io.github.cursodsouza.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor
-public class LivroController {
+public class LivroController implements GenericController {
     private final LivroService service;
+    private final LivroMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
-        try {
-            /* Autor autorEntidade = autor.mapearParaAutor();
-            service.salvar(autorEntidade);
+    public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
+        Livro livro = mapper.toEntity(dto);
+        service.salvar(livro);
+        URI location = gerarUriComponentBuilder(livro.getId());
+        return ResponseEntity.created(location).build();
+    }
 
-            //http://localhost:8080/autores/02cda449-b1f0-4115-b088-34410069e6e0 (no headers de resposta resposta)
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(autorEntidade.getId())
-                    .toUri();
+    @GetMapping("{id}")
+    public ResponseEntity<ResultadoPesquisaLivroDTO> obterDetalhes(@PathVariable("id") String id){
+        return service.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    var dto = mapper.toDTO(livro);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet( () -> ResponseEntity.notFound().build() );
+    }
 
-            return ResponseEntity.created(location).build(); */
-            return  ResponseEntity.ok(dto);
-        } catch (RegistroDuplicadoException e){
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return  ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deletar(@PathVariable("id") String id){
+        return service.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    service.deletar(livro);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet( () -> ResponseEntity.notFound().build());
     }
 }
