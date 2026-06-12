@@ -29,3 +29,7 @@ join autor as a on l.id_autor = a.id
 
 // busca
 select * from livro where titulo like '%casa%'
+
+select l.* from livro as l
+join autor as a on a.id = l.id_autor
+where upper(a.nome) like upper('%Lima%')
