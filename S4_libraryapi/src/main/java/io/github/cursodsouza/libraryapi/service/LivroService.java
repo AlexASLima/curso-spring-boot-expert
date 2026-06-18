@@ -6,6 +6,9 @@ import io.github.cursodsouza.libraryapi.repository.LivroRepository;
 import io.github.cursodsouza.libraryapi.repository.specs.LivroSpecs;
 import io.github.cursodsouza.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +44,14 @@ public class LivroService {
         repository.save(livro);
     }
 
-    public List<Livro> pesquisa(
-            String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao){
+    public Page<Livro> pesquisa(
+            String isbn,
+            String titulo,
+            String nomeAutor,
+            GeneroLivro genero,
+            Integer anoPublicacao,
+            Integer pagina,
+            Integer tamanhoPagina){
 
         // select * from livro where isbn = :isbn and nomeAutor =
 
@@ -75,6 +84,8 @@ public class LivroService {
             specs = specs.and(LivroSpecs.nomeAutorLike(nomeAutor));
         }
 
-        return repository.findAll(specs);
+        Pageable pagerrequest = PageRequest.of(pagina, tamanhoPagina);
+
+        return repository.findAll(specs, pagerrequest);
     }
 }
