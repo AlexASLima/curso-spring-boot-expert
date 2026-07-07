@@ -16,8 +16,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                //.formLogin(Customizer.withDefaults()) para não mostrar o form log para enviar o hash na url
                 .httpBasic(Customizer.withDefaults())
+                //.formLogin(Customizer.withDefaults()) para não mostrar o form login. Assim envia um hash na url para acessar.
+                // abaixo vai chamar o form login criado e não o default acima
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").permitAll();
+                })
                 .authorizeHttpRequests(authorize -> {
                     authorize.anyRequest().authenticated();
                 })
