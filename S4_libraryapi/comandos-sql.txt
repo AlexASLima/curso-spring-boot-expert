@@ -22,6 +22,13 @@ create table livro (
    constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO','ROMANCE', 'BIOGRAFIA', 'CIENCIA') )
 );
 
+create table usuario(
+    id uuid not null primary key,
+    login varchar(20) not null unique,
+    senha varchar(300) not null,
+    roles varchar[]
+);
+
 // Para verificar testes:
 select l.id, l.titulo as nome_livro, a.nome as nome_autor
 from livro as l
