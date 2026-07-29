@@ -1,9 +1,12 @@
 package io.github.cursodsouza.libraryapi.config;
 
+import io.github.cursodsouza.libraryapi.security.CustomUserDetailsService;
+import io.github.cursodsouza.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint.
 public class SecurityConfiguration {
 
     @Bean
@@ -30,10 +34,13 @@ public class SecurityConfiguration {
                     configurer.loginPage("/login").permitAll();
                 })
                 .authorizeHttpRequests(authorize -> {
-                    //authorize.requestMatchers("/autores/**").hasRole("ADMIN");
-                    //authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
+
+                    /// Esses abaixo, agora serão colocado no próprios endpoint. Para não ir ficando muitas regras aqui.
+                    //authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    //authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+
                     authorize.anyRequest().authenticated();
                 })
                 .build();
@@ -45,9 +52,9 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-    //public UserDetailsService userDetailsService(UsuarioService usuarioService) {
-
+    //public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
+        /*
         UserDetails user1 = User.builder()
                 .username("usuario")
                 .password(encoder.encode("123"))
@@ -60,8 +67,8 @@ public class SecurityConfiguration {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(user1, user2);
+        return new InMemoryUserDetailsManager(user1, user2); */
 
-        //return new CustomUserDetailsService(usuarioService);
+        return new CustomUserDetailsService(usuarioService);
     }
 }
