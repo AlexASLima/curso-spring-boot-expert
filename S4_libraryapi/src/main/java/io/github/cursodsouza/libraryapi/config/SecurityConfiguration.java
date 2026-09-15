@@ -20,9 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint.
+//@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint.
 public class SecurityConfiguration {
-
+    /*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -43,6 +43,17 @@ public class SecurityConfiguration {
 
                     authorize.anyRequest().authenticated();
                 })
+                .build();
+    } */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .authorizeHttpRequests(authorize -> {
+                    authorize.anyRequest().permitAll();
+                })
+
                 .build();
     }
 
