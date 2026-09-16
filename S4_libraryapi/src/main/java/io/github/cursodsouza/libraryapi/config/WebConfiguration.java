@@ -7,7 +7,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-//@EnableWebMvc
+// Temporariamente desabilitado enquanto a segurança está desligada
+// @EnableWebMvc
 public class WebConfiguration implements WebMvcConfigurer {
 
     @Override

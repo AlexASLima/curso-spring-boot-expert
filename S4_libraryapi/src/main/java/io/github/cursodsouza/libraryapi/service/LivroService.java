@@ -27,8 +27,9 @@ public class LivroService {
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        /* Temporariamente desabilitado enquanto a segurança está desligada
         Usuario usuario = securityService.obterUsuarioLogado();
-        livro.setUsuario(usuario);
+        livro.setUsuario(usuario); */
         return repository.save(livro);
     }
 

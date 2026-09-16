@@ -19,11 +19,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+/*Temporariamente desabilitado enquanto a segurança está desligada
 @EnableWebSecurity
-//@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint.
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint. */
 public class SecurityConfiguration {
-    /*
-    @Bean
+    /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)

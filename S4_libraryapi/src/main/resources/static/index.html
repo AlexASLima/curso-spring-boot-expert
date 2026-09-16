@@ -27,7 +27,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Livros</h2>
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalLivro">
             Novo Livro
         </button>
     </div>
@@ -49,6 +51,115 @@
         </tbody>
 
     </table>
+
+    <div class="modal fade" id="modalLivro" tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Livro</h5>
+
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="form-livro">
+
+                        <div class="mb-3">
+                            <label for="isbn" class="form-label">
+                                ISBN
+                            </label>
+
+                            <input type="text"
+                                    class="form-control"
+                                    id="isbn">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">
+                                Título
+                            </label>
+
+                            <input type="text"
+                                    class="form-control"
+                                    id="titulo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dataPublicacao" class="form-label">
+                                Data de publicação
+                            </label>
+
+                            <input type="date"
+                                    class="form-control"
+                                    id="dataPublicacao">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="genero" class="form-label">
+                                Gênero
+                            </label>
+
+                            <select class="form-select" id="genero">
+                                <option value="">Selecione...</option>
+                                <option value="FICCAO">Ficção</option>
+                                <option value="MISTERIO">Mistério</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preco" class="form-label">
+                                Preço
+                            </label>
+
+                            <input type="number"
+                                    step="0.01"
+                                    class="form-control"
+                                    id="preco">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="autor" class="form-label">
+                                Autor
+                            </label>
+
+                            <select class="form-select" id="autor">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="btn-salvar">
+                        Salvar
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 </main>
 
