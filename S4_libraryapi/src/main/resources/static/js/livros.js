@@ -63,8 +63,8 @@ carregarAutores();
 
 document.getElementById("btn-salvar").addEventListener("click", salvarLivro);
 async function salvarLivro() {
-    esconderErro();
-    limparErrosCampos();
+    //esconderErro();
+    //limparErrosCampos();
 
     const livro = {
         isbn: document.getElementById("isbn").value,
@@ -87,12 +87,10 @@ async function salvarLivro() {
     console.log("Status do cadastro:", response.status);
     if (response.ok) {
         console.log("Livro cadastrado com sucesso!");
-
-        document.getElementById("form-livro").reset(); // limpa os campos
-
         const modalElement = document.getElementById("modalLivro");
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        modal.hide();
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        modal.hide(); // limpa campos tbm
 
         await carregarLivros();
     } else {
@@ -159,4 +157,23 @@ function mostrarErroCampo(nomeCampo, mensagem) {
             mensagem.textContent = "";
         });
     }
+
+    // ==========================
+    // EVENTOS / INICIALIZAÇÃO
+    // ==========================
+
+    // Evento do botão Salvar
+    document.getElementById("btn-salvar").addEventListener("click", salvarLivro);
+
+    // Evento disparado quando o modal é fechado
+    const modalLivro = document.getElementById("modalLivro");
+
+    modalLivro.addEventListener("hidden.bs.modal", function () {
+        // Limpa os campos
+        document.getElementById("form-livro").reset();
+        // Remove campos vermelhos e mensagens
+        limparErrosCampos();
+        // Esconde o alerta vermelho
+        esconderErro();
+    });
 }
