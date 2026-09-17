@@ -63,6 +63,9 @@ carregarAutores();
 
 document.getElementById("btn-salvar").addEventListener("click", salvarLivro);
 async function salvarLivro() {
+    esconderErro();
+    limparErrosCampos();
+
     const livro = {
         isbn: document.getElementById("isbn").value,
         titulo: document.getElementById("titulo").value,
@@ -72,7 +75,7 @@ async function salvarLivro() {
         idAutor: document.getElementById("autor").value
     };
 
-    console.log("Livro que será enviado:", livro);
+    console.log("Livro que será enviado to save:", livro);
     const response = await fetch("/livros", {
         method: "POST",
         headers: {
@@ -82,8 +85,78 @@ async function salvarLivro() {
     });
 
     console.log("Status do cadastro:", response.status);
-    if (!response.ok) {
-        const erro = await response.text();
-        console.log("Erro retornado pelo servidor:", erro);
+    if (response.ok) {
+        console.log("Livro cadastrado com sucesso!");
+
+        document.getElementById("form-livro").reset(); // limpa os campos
+
+        const modalElement = document.getElementById("modalLivro");
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+
+        await carregarLivros();
+    } else {
+        const respostaErro = await response.json();
+        console.log("Erro retornado pelo servidor:", respostaErro);
+        let mensagem = respostaErro.mensagem;
+
+        if (respostaErro.erros && respostaErro.erros.length > 0) {
+            respostaErro.erros.forEach(erro => {
+                mostrarErroCampo(erro.campo, erro.erro);
+
+                mensagem += `\n${erro.campo}: ${erro.erro}`;
+        });
+
+        mostrarErro(mensagem);
+    }
+
+    }
+
+    function mostrarErro(mensagem) {
+        const alerta = document.getElementById("alerta-erro");
+        alerta.textContent = mensagem;
+        alerta.classList.remove("d-none");
+    }
+
+    function esconderErro() {
+        const alerta = document.getElementById("alerta-erro");
+        alerta.textContent = "";
+        alerta.classList.add("d-none");
+    }
+
+function obterIdCampo(nomeCampo) {
+    if (nomeCampo === "idAutor") {
+        return "autor";
+    }
+
+    return nomeCampo;
+}
+
+function mostrarErroCampo(nomeCampo, mensagem) {
+    const idCampo = obterIdCampo(nomeCampo);
+    const campo = document.getElementById(idCampo);
+
+    if (!campo) {
+        console.log("Campo não encontrado no HTML:", idCampo);
+        return;
+    }
+
+    campo.classList.add("is-invalid");
+    const feedback = campo.parentElement.querySelector(".invalid-feedback");
+    if (feedback) {
+        feedback.textContent = mensagem;
+    }
+}
+
+    function limparErrosCampos() {
+        const camposInvalidos = document.querySelectorAll(".is-invalid");
+        camposInvalidos.forEach(campo => {
+            campo.classList.remove("is-invalid");
+        });
+
+        const mensagensErro = document.querySelectorAll(".invalid-feedback");
+        mensagensErro.forEach(mensagem => {
+            mensagem.textContent = "";
+        });
     }
 }
