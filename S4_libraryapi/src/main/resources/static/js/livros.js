@@ -61,9 +61,8 @@ async function carregarAutores() {
 carregarLivros();
 carregarAutores();
 
-document.getElementById("btn-salvar").addEventListener("click", salvarLivro);
 async function salvarLivro() {
-    //esconderErro();
+    //esconderErro(); Agora estão no evento de fechar o form Novo Livro.
     //limparErrosCampos();
 
     const livro = {
@@ -85,30 +84,31 @@ async function salvarLivro() {
     });
 
     console.log("Status do cadastro:", response.status);
+
     if (response.ok) {
         console.log("Livro cadastrado com sucesso!");
+
         const modalElement = document.getElementById("modalLivro");
         const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-
         modal.hide(); // limpa campos tbm
 
         await carregarLivros();
     } else {
         const respostaErro = await response.json();
         console.log("Erro retornado pelo servidor:", respostaErro);
-        let mensagem = respostaErro.mensagem;
 
+        let mensagem = respostaErro.mensagem;
         if (respostaErro.erros && respostaErro.erros.length > 0) {
             respostaErro.erros.forEach(erro => {
                 mostrarErroCampo(erro.campo, erro.erro);
 
                 mensagem += `\n${erro.campo}: ${erro.erro}`;
-        });
+            });
 
-        mostrarErro(mensagem);
+            mostrarErro(mensagem);
+        }
     }
-
-    }
+}
 
     function mostrarErro(mensagem) {
         const alerta = document.getElementById("alerta-erro");
@@ -122,29 +122,29 @@ async function salvarLivro() {
         alerta.classList.add("d-none");
     }
 
-function obterIdCampo(nomeCampo) {
-    if (nomeCampo === "idAutor") {
-        return "autor";
+    function obterIdCampo(nomeCampo) {
+        if (nomeCampo === "idAutor") {
+            return "autor";
+        }
+
+        return nomeCampo;
     }
 
-    return nomeCampo;
-}
+    function mostrarErroCampo(nomeCampo, mensagem) {
+        const idCampo = obterIdCampo(nomeCampo);
+        const campo = document.getElementById(idCampo);
 
-function mostrarErroCampo(nomeCampo, mensagem) {
-    const idCampo = obterIdCampo(nomeCampo);
-    const campo = document.getElementById(idCampo);
+        if (!campo) {
+            console.log("Campo não encontrado no HTML:", idCampo);
+            return;
+        }
 
-    if (!campo) {
-        console.log("Campo não encontrado no HTML:", idCampo);
-        return;
+        campo.classList.add("is-invalid");
+        const feedback = campo.parentElement.querySelector(".invalid-feedback");
+        if (feedback) {
+            feedback.textContent = mensagem;
+        }
     }
-
-    campo.classList.add("is-invalid");
-    const feedback = campo.parentElement.querySelector(".invalid-feedback");
-    if (feedback) {
-        feedback.textContent = mensagem;
-    }
-}
 
     function limparErrosCampos() {
         const camposInvalidos = document.querySelectorAll(".is-invalid");
@@ -167,7 +167,6 @@ function mostrarErroCampo(nomeCampo, mensagem) {
 
     // Evento disparado quando o modal é fechado
     const modalLivro = document.getElementById("modalLivro");
-
     modalLivro.addEventListener("hidden.bs.modal", function () {
         // Limpa os campos
         document.getElementById("form-livro").reset();
@@ -176,4 +175,3 @@ function mostrarErroCampo(nomeCampo, mensagem) {
         // Esconde o alerta vermelho
         esconderErro();
     });
-}
