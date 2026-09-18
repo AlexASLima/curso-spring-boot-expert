@@ -4,8 +4,8 @@ async function carregarLivros() {
     console.log("Buscando livros...");
 
     const response = await fetch("/livros");
-    console.log("Status da requisição:", response.status);
 
+    console.log("Status da requisição:", response.status);
     const resultado = await response.json();
     console.log("Resposta da API:", resultado);
 
@@ -26,7 +26,8 @@ async function carregarLivros() {
                     Editar
                 </button>
 
-                <button class="btn btn-sm btn-danger">
+                <button class="btn btn-sm btn-danger"
+                        onclick="abrirModalExcluir('${livro.id}')">
                     Excluir
                 </button>
             </td>
@@ -110,6 +111,34 @@ async function salvarLivro() {
     }
 }
 
+let idLivroExcluir = null;
+
+function abrirModalExcluir(id) {
+    idLivroExcluir = id;
+
+    console.log("Livro selecionado para exclusão:", idLivroExcluir);
+    const modalElement = document.getElementById("modalExcluir");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
+
+async function excluirLivro(id) {
+    console.log("ID do livro para excluir:", id);
+    const response = await fetch(`/livros/${id}`, {
+        method: "DELETE"
+    });
+
+    console.log("Status da exclusão:", response.status);
+    if (response.ok) {
+        console.log("Livro excluído com sucesso!");
+        const modalElement = document.getElementById("modalExcluir");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.hide();
+
+        await carregarLivros();
+    }
+}
+
     function mostrarErro(mensagem) {
         const alerta = document.getElementById("alerta-erro");
         alerta.textContent = mensagem;
@@ -174,4 +203,15 @@ async function salvarLivro() {
         limparErrosCampos();
         // Esconde o alerta vermelho
         esconderErro();
+    });
+
+    document.getElementById("btn-confirmar-exclusao").addEventListener("click", function () {
+        console.log("Confirmando exclusão:", idLivroExcluir);
+        excluirLivro(idLivroExcluir);
+    });
+
+    const modalExcluir = document.getElementById("modalExcluir");
+    modalExcluir.addEventListener("hidden.bs.modal", function () {
+        idLivroExcluir = null;
+        console.log("ID para exclusão limpo:", idLivroExcluir);
     });
