@@ -1,5 +1,8 @@
 console.log("JavaScript carregado!");
 
+let idLivroEdicao = null;
+let idLivroExcluir = null;
+
 async function carregarLivros() {
     console.log("Buscando livros...");
 
@@ -22,7 +25,8 @@ async function carregarLivros() {
             <td>${livro.genero}</td>
             <td>R$ ${livro.preco.toFixed(2)}</td>
             <td>
-                <button class="btn btn-sm btn-warning">
+                <button class="btn btn-sm btn-warning"
+                        onclick="editarLivro('${livro.id}')">
                     Editar
                 </button>
 
@@ -74,10 +78,24 @@ async function salvarLivro() {
         preco: Number(document.getElementById("preco").value),
         idAutor: document.getElementById("autor").value
     };
+    console.log("Livro que será enviado to save_update:", livro);
+    console.log("Modo edição?", idLivroEdicao);
 
-    console.log("Livro que será enviado to save:", livro);
-    const response = await fetch("/livros", {
-        method: "POST",
+    let url;
+    let metodo;
+    if (idLivroEdicao === null) {
+        url = "/livros";
+        metodo = "POST";
+    } else {
+        url = `/livros/${idLivroEdicao}`;
+        metodo = "PUT";
+    }
+
+    console.log("URL:", url);
+    console.log("Método:", metodo);
+
+    const response = await fetch(url, {
+        method: metodo,
         headers: {
             "Content-Type": "application/json"
         },
@@ -85,13 +103,12 @@ async function salvarLivro() {
     });
 
     console.log("Status do cadastro:", response.status);
-
     if (response.ok) {
-        console.log("Livro cadastrado com sucesso!");
+        console.log("Livro cadastrado_atualizado com sucesso!");
 
         const modalElement = document.getElementById("modalLivro");
         const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-        modal.hide(); // limpa campos tbm
+        modal.hide();
 
         await carregarLivros();
     } else {
@@ -111,13 +128,34 @@ async function salvarLivro() {
     }
 }
 
-let idLivroExcluir = null;
-
 function abrirModalExcluir(id) {
     idLivroExcluir = id;
 
     console.log("Livro selecionado para exclusão:", idLivroExcluir);
     const modalElement = document.getElementById("modalExcluir");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
+
+async function editarLivro(id) {
+    idLivroEdicao = id;
+    console.log("Livro em edição:", idLivroEdicao);
+
+    const response = await fetch(`/livros/${id}`);
+    console.log("Status da busca:", response.status);
+    const livro = await response.json();
+    console.log("Livro encontrado:", livro);
+
+    document.getElementById("isbn").value = livro.isbn;
+    document.getElementById("titulo").value = livro.titulo;
+    document.getElementById("dataPublicacao").value = livro.dataPublicacao;
+    document.getElementById("genero").value = livro.genero;
+    document.getElementById("preco").value = livro.preco;
+    document.getElementById("autor").value = livro.autor.id;
+
+    document.getElementById("titulo-modal-livro").textContent = "Editar Livro";
+
+    const modalElement = document.getElementById("modalLivro");
     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
     modal.show();
 }
@@ -203,7 +241,18 @@ async function excluirLivro(id) {
         limparErrosCampos();
         // Esconde o alerta vermelho
         esconderErro();
+
+        idLivroEdicao = null;
+        document.getElementById("titulo-modal-livro").textContent = "Novo Livro";
     });
+
+    document.getElementById("btn-novo-livro").addEventListener("click", prepararNovoLivro);
+    function prepararNovoLivro() {
+        idLivroEdicao = null;
+        document.getElementById("titulo-modal-livro").textContent ="Novo Livro";
+
+        console.log("Modo cadastro");
+    }
 
     document.getElementById("btn-confirmar-exclusao").addEventListener("click", function () {
         console.log("Confirmando exclusão:", idLivroExcluir);
