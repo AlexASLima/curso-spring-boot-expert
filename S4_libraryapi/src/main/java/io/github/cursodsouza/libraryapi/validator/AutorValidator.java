@@ -21,15 +21,19 @@ public class AutorValidator {
         }
     }
 
-    private boolean existeAutorCadastrado(Autor autor){
-        Optional<Autor> autorEncontrado = repository.findByNomeAndDataNascimentoAndNacionalidade(
-                autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade()
-        );
-
-        if(autor.getId() == null){ // Cadastrando, não atualizando.
+    private boolean existeAutorCadastrado(Autor autor) {
+        Optional<Autor> autorEncontrado =
+                repository.findByNomeAndDataNascimentoAndNacionalidade(
+                        autor.getNome(),
+                        autor.getDataNascimento(),
+                        autor.getNacionalidade()
+                );
+        if (autor.getId() == null) { // Cadastrando, não atualizando.
             return autorEncontrado.isPresent();
         }
-              // Teste se não é o autor que esta atualizando
-        return !autor.getId().equals(autorEncontrado.get().getId()) && autorEncontrado.isPresent();
+
+        // Verifica se encontrou OUTRO autor
+        return autorEncontrado.isPresent()
+                && !autor.getId().equals(autorEncontrado.get().getId());
     }
 }

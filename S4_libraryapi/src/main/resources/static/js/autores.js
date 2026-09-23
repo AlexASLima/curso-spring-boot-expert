@@ -1,4 +1,5 @@
 console.log("JavaScript de autores carregado!");
+let idAutorEdicao = null;
 
 async function carregarAutores() {
     console.log("Buscando autores...");
@@ -17,7 +18,8 @@ async function carregarAutores() {
             <td>${autor.dataNascimento}</td>
             <td>${autor.nacionalidade}</td>
             <td>
-                <button class="btn btn-sm btn-warning">
+                <button class="btn btn-sm btn-warning"
+                    onclick="editarAutor('${autor.id}')">
                     Editar
                 </button>
                 <button class="btn btn-sm btn-danger">
@@ -40,17 +42,35 @@ async function salvarAutor() {
         nacionalidade: document.getElementById("nacionalidade").value
     };
     console.log("Autor que será enviado:", autor);
-    const response = await fetch("/autores", {
-        method: "POST",
+    console.log("Autor em edição:", idAutorEdicao);
+    let url;
+    let metodo;
+
+    if (idAutorEdicao === null) {
+        url = "/autores";
+        metodo = "POST";
+    } else {
+        url = `/autores/${idAutorEdicao}`;
+        metodo = "PUT";
+    }
+    console.log("URL:", url);
+    console.log("Método:", metodo);
+
+    const response = await fetch(url, {
+        method: metodo,
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(autor)
     });
-    console.log("Status do cadastro:", response.status);
 
+    console.log("Status do cadastro:", response.status);
     if (response.ok) {
-       console.log("Autor cadastrado com sucesso!");
+        if (idAutorEdicao === null) {
+            console.log("Autor cadastrado com sucesso!");
+        } else {
+            console.log("Autor atualizado com sucesso!");
+        }
        const modalElement = document.getElementById("modalAutor");
        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
        modal.hide();
@@ -73,6 +93,23 @@ async function salvarAutor() {
       }
 }
 
+async function editarAutor(id) {
+    idAutorEdicao = id;
+    console.log("Autor em edição:", idAutorEdicao);
+    const response = await fetch(`/autores/${id}`);
+    console.log("Status da busca:", response.status);
+
+    const autor = await response.json();
+    console.log("Autor encontrado:", autor);
+    document.getElementById("nome").value = autor.nome;
+    document.getElementById("dataNascimento").value = autor.dataNascimento;
+    document.getElementById("nacionalidade").value = autor.nacionalidade;
+
+    const modalElement = document.getElementById("modalAutor");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
+
 //--- Eventos ---
 document.getElementById("btn-salvar-autor").addEventListener("click", salvarAutor);
 
@@ -80,6 +117,7 @@ const modalAutor = document.getElementById("modalAutor");
 modalAutor.addEventListener("hidden.bs.modal", function () {
     document.getElementById("form-autor").reset();
     limparErrosAutor();
+    idAutorEdicao = null;
     console.log("Formulário de autor limpo");
 });
 
