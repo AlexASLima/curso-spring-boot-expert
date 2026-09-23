@@ -71,6 +71,13 @@
             </div>
 
             <div class="modal-body">
+
+                <div id="alerta-erro-autor"
+                     class="alert alert-danger d-none"
+                     style="white-space: pre-line;"
+                     role="alert">
+                </div>
+
                 <form id="form-autor">
                     <div class="mb-3">
                         <label for="nome" class="form-label">
@@ -80,6 +87,7 @@
                                 type="text"
                                 class="form-control"
                                 id="nome">
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="mb-3">
@@ -90,6 +98,7 @@
                                 type="date"
                                 class="form-control"
                                 id="dataNascimento">
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="mb-3">
@@ -100,6 +109,7 @@
                                 type="text"
                                 class="form-control"
                                 id="nacionalidade">
+                        <div class="invalid-feedback"></div>
                     </div>
                 </form>
             </div>
