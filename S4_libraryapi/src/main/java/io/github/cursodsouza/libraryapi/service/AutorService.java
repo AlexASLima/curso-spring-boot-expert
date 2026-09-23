@@ -26,8 +26,9 @@ public class AutorService {
 
     public Autor salvar(Autor autor){
         validator.validar(autor);
+        /* Temporariamente desabilitado enquanto a segurança está desligada
         Usuario usuario = securityService.obterUsuarioLogado();
-        autor.setUsuario(usuario);
+        autor.setUsuario(usuario); */
         return repository.save(autor);
     }
 
