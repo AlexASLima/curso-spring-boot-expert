@@ -1,5 +1,6 @@
 console.log("JavaScript de autores carregado!");
 let idAutorEdicao = null;
+let idAutorExcluir = null;
 
 async function carregarAutores() {
     console.log("Buscando autores...");
@@ -22,7 +23,8 @@ async function carregarAutores() {
                     onclick="editarAutor('${autor.id}')">
                     Editar
                 </button>
-                <button class="btn btn-sm btn-danger">
+                <button class="btn btn-sm btn-danger"
+                    onclick="abrirModalExcluirAutor('${autor.id}')">
                     Excluir
                 </button>
             </td>
@@ -110,8 +112,43 @@ async function editarAutor(id) {
     modal.show();
 }
 
+async function excluirAutor(id) {
+    console.log("ID do autor para excluir:", id);
+    const response = await fetch(`/autores/${id}`, {
+        method: "DELETE"
+    });
+    console.log("Status da exclusão:", response.status);
+    if (response.ok) {
+        console.log("Autor excluído com sucesso!");
+        const modalElement = document.getElementById("modalExcluirAutor");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.hide();
+
+        await carregarAutores();
+    } else {
+       const alerta = document.getElementById("alerta-erro-exclusao-autor");
+       alerta.textContent =
+        "Não foi possível excluir o autor. Verifique se ele está vinculado a algum livro.";
+       alerta.classList.remove("d-none");
+    }
+}
+
+function abrirModalExcluirAutor(id) {
+    idAutorExcluir = id;
+    console.log("Autor selecionado para exclusão:", idAutorExcluir);
+
+    const modalElement = document.getElementById("modalExcluirAutor");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
+
 //--- Eventos ---
 document.getElementById("btn-salvar-autor").addEventListener("click", salvarAutor);
+
+document.getElementById("btn-confirmar-exclusao-autor").addEventListener("click", function () {
+     console.log("Confirmando exclusão:", idAutorExcluir);
+     excluirAutor(idAutorExcluir);
+});
 
 const modalAutor = document.getElementById("modalAutor");
 modalAutor.addEventListener("hidden.bs.modal", function () {
@@ -119,6 +156,16 @@ modalAutor.addEventListener("hidden.bs.modal", function () {
     limparErrosAutor();
     idAutorEdicao = null;
     console.log("Formulário de autor limpo");
+});
+
+modalExcluirAutor.addEventListener("hidden.bs.modal", function () {
+    idAutorExcluir = null;
+    const alerta = document.getElementById(
+        "alerta-erro-exclusao-autor"
+    );
+    alerta.textContent = "";
+    alerta.classList.add("d-none");
+    console.log("ID de exclusão do autor limpo");
 });
 
 function mostrarErroAutor(mensagem) {
