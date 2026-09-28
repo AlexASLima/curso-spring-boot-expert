@@ -126,10 +126,11 @@ async function excluirAutor(id) {
 
         await carregarAutores();
     } else {
-       const alerta = document.getElementById("alerta-erro-exclusao-autor");
-       alerta.textContent =
-        "Não foi possível excluir o autor. Verifique se ele está vinculado a algum livro.";
-       alerta.classList.remove("d-none");
+        const respostaErro = await response.json();
+        console.log("Erro retornado pelo servidor:", respostaErro);
+        const alerta = document.getElementById("alerta-erro-exclusao-autor");
+        alerta.textContent = respostaErro.mensagem;
+        alerta.classList.remove("d-none");
     }
 }
 
