@@ -1,10 +1,11 @@
 package io.github.cursodsouza.libraryapi.controller.dto;
 
 import java.util.List;
+import java.util.UUID;
 
-public record UsuarioDTO(
+public record ResultadoUsuarioDTO(
+        UUID id,
         String login,
-        String senha,
-        List<String> roles) {
-    //
+        List<String> roles
+) {
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +62,20 @@ public class GlobalExceptionHandler {
         return new ErroResposta(HttpStatus.FORBIDDEN.value(), "Acesso Negado.", List.of());
     }
 
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErroResposta> tratarResponseStatusException(
+            ResponseStatusException e) {
+        int status = e.getStatusCode().value();
+        ErroResposta erro = new ErroResposta(
+                status,
+                e.getReason(),
+                List.of()
+        );
+
+        return ResponseEntity.status(e.getStatusCode()).body(erro);
+    }
+
+    //-------------------- generico -----------
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroResposta handleErrosNaoTratados(RuntimeException e){
