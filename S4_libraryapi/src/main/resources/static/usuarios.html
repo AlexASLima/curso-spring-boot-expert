@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">Gerenciamento de Usuários</h2>
+
+    <button type="button"
+            class="btn btn-primary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalUsuario">
+        Novo Usuário
+    </button>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Login</th>
+            <th>Perfis</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+
+        <tbody id="tabelaUsuarios">
+        <!-- Os usuários serão inseridos pelo JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Modal para cadastrar/editar usuários -->
+    <div class="modal fade" id="modalUsuario" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalUsuario">Novo Usuário</h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formUsuario">
+                        <!-- Armazena o ID do usuário quando estamos editando -->
+                        <input type="hidden" id="idUsuario">
+
+                        <!-- Login -->
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Login</label>
+                            <input type="text" class="form-control" id="login" required>
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="mb-3">
+                            <label for="senha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="senha" required minlength="8">
+                        </div>
+
+                        <!-- Perfil -->
+                        <div class="mb-3">
+                            <label for="roles" class="form-label">Perfil</label>
+                            <select id="roles" class="form-select" required>
+                                <option value="">Selecione...</option>
+                                <option value="OPERADOR">Operador</option>
+                                <option value="GERENTE">Gerente</option>
+                            </select>
+                        </div>
+
+                        <div id="mensagemErroUsuario" class="alert alert-danger d-none"></div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" form="formUsuario"
+                            class="btn btn-primary">
+                        Salvar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/usuarios.js"></script>
+
+</body>
+</html>
