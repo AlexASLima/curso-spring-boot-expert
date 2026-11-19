@@ -43,7 +43,25 @@ async function carregarUsuarios() {
             botaoEditar.addEventListener("click", () => {
                 editarUsuario(usuario);
             });
+            const botaoAlterarSenha = document.createElement("button");
+            botaoAlterarSenha.type = "button";
+            botaoAlterarSenha.className = "btn btn-info btn-sm ms-2";
+            botaoAlterarSenha.textContent = "Alterar Senha";
+
+            botaoAlterarSenha.addEventListener("click", () => {
+                abrirModalSenha(usuario);
+            });
+            const botaoExcluir = document.createElement("button");
+            botaoExcluir.type = "button";
+            botaoExcluir.className = "btn btn-danger btn-sm ms-2";
+            botaoExcluir.textContent = "Excluir";
+            botaoExcluir.addEventListener("click", () => {
+                excluirUsuario(usuario);
+            });
+
             colunaAcoes.appendChild(botaoEditar);
+            colunaAcoes.appendChild(botaoAlterarSenha);
+            colunaAcoes.appendChild(botaoExcluir);
 
             // Adiciona as células à linha
             linha.appendChild(colunaLogin);
@@ -172,6 +190,123 @@ function editarUsuario(usuario) {
     );
 
     modal.show();
+}
+
+// Abre o modal de alteração de senha
+function abrirModalSenha(usuario) {
+    // Armazena o ID do usuário selecionado
+    document.getElementById("idUsuarioSenha").value = usuario.id;
+
+    // Exibe o login do usuário
+    document.getElementById("loginUsuarioSenha").textContent = usuario.login;
+
+    // Limpa a senha digitada anteriormente
+    document.getElementById("novaSenha").value = "";
+
+    // Limpa mensagens de erro anteriores
+    const mensagemErro = document.getElementById("mensagemErroSenha");
+    mensagemErro.textContent = "";
+    mensagemErro.classList.add("d-none");
+
+    // Abre o modal
+    const modal = bootstrap.Modal.getOrCreateInstance(
+        document.getElementById("modalSenha")
+    );
+
+    modal.show();
+}
+
+// Captura o envio do formulário de alteração de senha
+document.getElementById("formSenha").addEventListener("submit", async function (event) {
+    // Impede o recarregamento da página
+    event.preventDefault();
+
+    // Recupera os dados do formulário
+    const idUsuario = document.getElementById("idUsuarioSenha").value;
+    const novaSenha = document.getElementById("novaSenha").value;
+
+    const mensagemErro = document.getElementById("mensagemErroSenha");
+    // Limpa mensagens anteriores
+    mensagemErro.textContent = "";
+    mensagemErro.classList.add("d-none");
+
+    // Monta o objeto esperado pelo AlteracaoSenhaDTO
+    const dadosSenha = {
+        novaSenha: novaSenha
+    };
+
+    try {
+        // Envia a nova senha para a API
+        const resposta = await fetch(`${API_USUARIOS}/${idUsuario}/senha`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dadosSenha)
+        });
+
+        // Verifica se ocorreu algum erro
+        if (!resposta.ok) {
+            const respostaErro = await resposta.json();
+            throw new Error(
+                respostaErro.mensagem || "Erro ao alterar senha."
+            );
+        }
+
+        // Fecha o modal
+        const modalElemento = document.getElementById("modalSenha");
+        const modal = bootstrap.Modal.getInstance(modalElemento);
+        modal.hide();
+
+        // Limpa o formulário
+        document.getElementById("formSenha").reset();
+
+        alert("Senha alterada com sucesso!");
+    } catch (erro) {
+        console.error("Erro ao alterar senha:", erro);
+        mensagemErro.textContent = erro.message;
+        mensagemErro.classList.remove("d-none");
+    }
+});
+
+// Exclui um usuário após confirmação
+async function excluirUsuario(usuario) {
+    // Solicita confirmação antes de excluir
+    const confirmou = confirm(
+        `Deseja realmente excluir o usuário "${usuario.login}"?`
+    );
+
+    // Se clicar em Cancelar, interrompe a função
+    if (!confirmou) {
+        return;
+    }
+
+    try {
+        // Envia a requisição DELETE para o backend
+        const resposta = await fetch(
+            `${API_USUARIOS}/${usuario.id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        // Verifica se ocorreu algum erro
+        if (!resposta.ok) {
+            const respostaErro = await resposta.json();
+            throw new Error(
+                respostaErro.mensagem || "Erro ao excluir usuário."
+            );
+        }
+
+        // Informa que a exclusão foi realizada
+        alert("Usuário excluído com sucesso!");
+
+        // Atualiza a tabela após excluir
+        await carregarUsuarios();
+    } catch (erro) {
+        console.error("Erro ao excluir usuário:", erro);
+        alert(erro.message);
+    }
 }
 
 document.getElementById("modalUsuario").addEventListener("hidden.bs.modal", function () {

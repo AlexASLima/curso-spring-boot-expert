@@ -76,7 +76,6 @@
 
                     </form>
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
                             data-bs-dismiss="modal">
@@ -89,6 +88,65 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para alterar senha -->
+    <div class="modal fade" id="modalSenha" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar Senha</h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formSenha">
+                        <!-- Guarda o ID do usuário -->
+                        <input type="hidden" id="idUsuarioSenha">
+
+                        <!-- Identifica o usuário selecionado -->
+                        <p>
+                            Usuário: <strong id="loginUsuarioSenha"></strong>
+                        </p>
+
+                        <!-- Nova senha -->
+                        <div class="mb-3">
+                            <label for="novaSenha" class="form-label">
+                                Nova Senha
+                            </label>
+
+                            <input type="password"
+                                   class="form-control"
+                                   id="novaSenha"
+                                   required
+                                   minlength="8"
+                                   maxlength="72">
+                        </div>
+
+                        <!-- Mensagem de erro -->
+                        <div id="mensagemErroSenha"
+                             class="alert alert-danger d-none"></div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            form="formSenha"
+                            class="btn btn-primary">
+                        Salvar Senha
+                    </button>
+                </div>
             </div>
         </div>
     </div>
