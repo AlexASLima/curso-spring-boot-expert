@@ -23,6 +23,21 @@
 
 <div class="login-container mt-5">
     <h2 class="text-center">Login</h2>
+
+    <!-- Mensagem exibida quando o login falhar -->
+    <div th:if="${param.error}"
+         class="alert alert-danger"
+         role="alert">
+        Usuário ou senha inválidos!
+    </div>
+
+    <!-- Mensagem exibida após o logout -->
+    <div th:if="${param.logout}"
+         class="alert alert-success"
+         role="alert">
+        Logout realizado com sucesso!
+    </div>
+
     <form method="post" th:action="@{/login}">
         <div class="mb-3">
             <label for="username" class="form-label">Usuário</label>

@@ -15,6 +15,9 @@ async function carregarUsuarios() {
         // Converte o JSON recebido em um array JavaScript
         const usuarios = await resposta.json();
 
+        // Ordena os usuários pelo login em ordem alfabética (A → Z)
+        usuarios.sort((a, b) => a.login.localeCompare(b.login, "pt-BR"));
+
         // Localiza o corpo da tabela no HTML
         const tabela = document.getElementById("tabelaUsuarios");
 

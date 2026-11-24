@@ -77,7 +77,7 @@ public class AutorController implements GenericController {
     @PutMapping("{id}")
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> atualizar(
-            @PathVariable("id") String id, @RequestBody AutorDTO dto) {
+            @PathVariable("id") String id, @RequestBody @Valid AutorDTO dto) {
 
         var idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = service.obterPorId(idAutor);

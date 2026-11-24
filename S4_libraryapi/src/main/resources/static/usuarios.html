@@ -11,7 +11,17 @@
 
 <div class="container mt-5">
 
-    <h2 class="mb-4">Gerenciamento de Usuários</h2>
+    <!-- Cabeçalho da página -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Gerenciamento de Usuários</h2>
+
+        <!-- Encerra a sessão no Spring Security -->
+        <form action="/logout" method="post">
+            <button type="submit" class="btn btn-outline-danger">
+                Sair
+            </button>
+        </form>
+    </div>
 
     <button type="button"
             class="btn btn-primary mb-3"

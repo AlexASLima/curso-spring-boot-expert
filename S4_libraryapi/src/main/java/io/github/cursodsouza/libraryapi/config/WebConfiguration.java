@@ -7,13 +7,16 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-// Temporariamente desabilitado enquanto a segurança está desligada
 // @EnableWebMvc
 public class WebConfiguration implements WebMvcConfigurer {
+    /*
+    // Alternativa para configurar a página de login sem um Controller.
+    // Mantida comentada para fins de estudo.
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
+    */
 }

@@ -23,12 +23,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor
+// SEGURANÇA: GERENTE e OPERADOR podem acessar todos os endpoints de livros.
+// Para desabilitar essa regra, comente a anotação abaixo.
+@PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
 public class LivroController implements GenericController {
     private final LivroService service;
     private final LivroMapper mapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
         Livro livro = mapper.toEntity(dto);
         service.salvar(livro);
@@ -37,7 +39,6 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<ResultadoPesquisaLivroDTO> obterDetalhes(@PathVariable("id") String id){
         return service.obterPorId(UUID.fromString(id))
                 .map(livro -> {
@@ -47,7 +48,6 @@ public class LivroController implements GenericController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> deletar(@PathVariable("id") String id){
         return service.obterPorId(UUID.fromString(id))
                 .map(livro -> {
@@ -57,7 +57,6 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Page<ResultadoPesquisaLivroDTO>> pesquisa(
             @RequestParam(value = "isbn", required = false)
             String isbn,
@@ -83,7 +82,6 @@ public class LivroController implements GenericController {
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> atualizar(
             @PathVariable("id") String id, @RequestBody @Valid CadastroLivroDTO dto) {
         return service.obterPorId(UUID.fromString(id))

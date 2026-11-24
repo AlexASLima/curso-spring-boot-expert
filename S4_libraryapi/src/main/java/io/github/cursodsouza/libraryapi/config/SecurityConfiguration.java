@@ -19,41 +19,59 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-/*Temporariamente desabilitado enquanto a segurança está desligada
-@EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint. */
+@EnableWebSecurity // comentar esse @ para desabilitar a segurança
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // Para habilitar colocar as regras de acesso nos endpoint.
 public class SecurityConfiguration {
-    /* @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    // ================================================
+    // MODO 1 - SEM SEGURANÇA
+    // ================================================
+    // Para DESABILITAR a segurança:
+    // Deixe este @Bean ativo e o outro comentado.
+    // @Bean // -  essa linha comentada desabilita o sem segurança
+    public SecurityFilterChain securityFilterChainSemSeguranca(
+            HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
-                //.formLogin(Customizer.withDefaults()) para não mostrar o form login. Assim envia um hash na url para acessar.
-                // abaixo vai chamar o form login criado/personalizado e não o default acima
-                .formLogin(configurer -> {
-                    configurer.loginPage("/login").permitAll();
-                })
-                .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/login/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
-
-                    /// Esses abaixo, agora serão colocado no próprios endpoint. Para não ir ficando muitas regras aqui.
-                    //authorize.requestMatchers("/autores/**").hasRole("ADMIN");
-                    //authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
-
-                    authorize.anyRequest().authenticated();
-                })
-                .build();
-    } */
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(authorize -> {
                     authorize.anyRequest().permitAll();
                 })
+                .build();
+    }
 
+    // ================================================
+    // MODO 2 - COM SEGURANÇA
+    // ================================================
+    // Para HABILITAR a segurança:
+    // Descomente este @Bean e comente o anterior.
+    @Bean
+    public SecurityFilterChain securityFilterChainComSeguranca(
+            HttpSecurity http) throws Exception {
+        return http
+                // Temporariamente desabilitado para
+                // estudarmos primeiro a autenticação.
+                // Depois habilitaremos a proteção CSRF.
+                .csrf(AbstractHttpConfigurer::disable)
+                // Configura nossa página de login.
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").permitAll();
+                })
+                // Configura o encerramento da sessão do usuário
+                .logout(configurer -> {
+                    configurer
+                            .logoutUrl("/logout")
+                            .logoutSuccessUrl("/login?logout")
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID")
+                            .permitAll();
+                })
+
+                // Configura as permissões de acesso.
+                .authorizeHttpRequests(authorize -> {
+                    // Permite acessar a página de login.
+                    authorize.requestMatchers("/login", "/login/**").permitAll();
+                    // Exige autenticação para as demais URLs.
+                    authorize.anyRequest().authenticated();
+                })
                 .build();
     }
 

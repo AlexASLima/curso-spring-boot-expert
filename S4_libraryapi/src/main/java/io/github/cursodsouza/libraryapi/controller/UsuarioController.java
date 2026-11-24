@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("usuarios")
 @RequiredArgsConstructor
+// SEGURANÇA: somente GERENTE pode acessar o gerenciamento de usuários.
+// Para desabilitar esta regra, comente a anotação abaixo.
+@PreAuthorize("hasRole('GERENTE')")
 public class UsuarioController {
 
     private final UsuarioService service;
